@@ -18,6 +18,7 @@ export function NavBar() {
           <div className="hidden md:flex items-center gap-8">
             <Link
               to="/"
+               onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="font-semibold text-gray-700 hover:text-pink-600 transition-colors"
             >
               Home
@@ -39,7 +40,7 @@ export function NavBar() {
             </a>
           </div>
 
-          {/* ORDER NOW BUTTON */}
+          {/* ORDER NOW BUTTON*/}
           <Link to="/products">
             <Button className="bg-pink-500 text-white hover:bg-pink-600 rounded-full shadow-lg px-6">
               Order Now
