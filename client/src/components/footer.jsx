@@ -7,19 +7,9 @@ export function Footer() {
           <div>
             <h3 className="text-2xl font-serif mb-4 text-foreground">Kim's Sweets 🧁</h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Homemade baked goods crafted with love and care since 2018. 
+              Homemade baked goods crafted with love and care. 
               Small batch, big flavor.
             </p>
-          </div>
-
-          {/* Business Hours */}
-          <div>
-            <h4 className="font-mono text-sm mb-4 text-foreground uppercase tracking-wider">Hours</h4>
-            <div className="space-y-2 text-sm text-muted-foreground">
-              <p>Tuesday - Saturday</p>
-              <p>8:00 AM - 4:00 PM</p>
-              <p className="text-xs mt-4 italic font-medium text-primary">Pre-orders recommended</p>
-            </div>
           </div>
 
           {/* Contact Section */}

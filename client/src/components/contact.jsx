@@ -11,7 +11,7 @@ export function Contact() {
               Get in Touch
             </h2>
             <p className="text-lg text-muted-foreground font-medium">
-              Ask any questions to the owner herself❤️
+              Ask any questions you may have, We will personally get back to you ASAP❤️
             </p>
           </div>
           

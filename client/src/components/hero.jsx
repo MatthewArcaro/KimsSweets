@@ -34,9 +34,9 @@ export function Hero() {
               </Button>
             </div>
           </div>
-          <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-8 border-secondary/60 rotate-2 hover:rotate-0 transition-transform duration-300">
+          <div className="relative aspect-square rounded-[3rem] overflow-hidden shadow-2xl border-8 border-secondary/60 rotate-2 hover:rotate-0 transition-transform duration-300 w-80 md:w-96 lg:w-[30rem] ml-16">
             <img
-              src="/vite.svg"
+              src="/Buns.png"
               alt="Fresh baked goods"
               className="object-cover w-full h-full"
             />
