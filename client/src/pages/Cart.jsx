@@ -15,7 +15,6 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <main className="min-h-screen bg-background">
-        <NavBar />
         <section className="pt-32 pb-16 px-4 min-h-screen flex items-center justify-center">
           <div className="text-center">
             <ShoppingBag className="h-24 w-24 mx-auto mb-6 text-muted-foreground/50" />
