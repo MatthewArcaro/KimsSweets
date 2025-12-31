@@ -5,6 +5,7 @@ import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/contexts/cart-context"
+import { Link } from "react-router-dom"
 import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
 
 export default function CartPage() {
@@ -24,7 +25,7 @@ export default function CartPage() {
               asChild
               className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-lg text-lg font-sans font-semibold px-8 py-6"
             >
-              <a href="/products">Browse Products</a>
+              <Link to="/products">Browse Products</Link>
             </Button>
           </div>
         </section>
