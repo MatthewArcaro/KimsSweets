@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button"
+import { useNavigate } from "react-router-dom"
 
 export function Hero() {
+  const navigate = useNavigate()
   return (
     <section
       id="home"
@@ -21,16 +23,10 @@ export function Hero() {
             <div className="flex gap-4 flex-wrap">
               <Button
                 size="lg"
+                onClick={() => navigate("/products")} // Redirects client-side
                 className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full shadow-xl text-lg font-sans font-bold px-8 py-6"
               >
                 View Menu
-              </Button>
-              <Button
-                size="lg"
-                variant="outline"
-                className="rounded-full border-4 border-primary/40 bg-card text-lg font-sans font-bold px-8 py-6 hover:bg-primary/10"
-              >
-                Our Story
               </Button>
             </div>
           </div>
