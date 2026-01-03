@@ -1,17 +1,43 @@
 "use client"
 
-import { NavBar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useCart } from "@/contexts/cart-context"
+import { useState } from "react"
 import { Link } from "react-router-dom"
-import { Minus, Plus, Trash2, ShoppingBag } from "lucide-react"
+import { Minus, Plus, Trash2, ShoppingBag, Store, MapPin } from "lucide-react"
 
 export default function CartPage() {
   const { items, removeItem, updateQuantity, clearCart, getTotalPrice, getTotalItems } = useCart()
   const totalPrice = getTotalPrice()
+  const [deliveryMethod, setDeliveryMethod] = useState(null)
   const totalItems = getTotalItems()
+  const [loading, setLoading] = useState(false)
+
+  const handleCheckout = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch("http://localhost:4242/create-checkout-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ items, deliveryMethod }), // send your cart items
+      })
+
+      const data = await response.json()
+      if (data.url) {
+        window.location.href = data.url // redirect to Stripe Checkout
+      } else {
+        console.error("No URL returned from backend")
+      }
+    } catch (err) {
+      console.error("Error creating checkout session", err)
+    } finally {
+      setLoading(false)
+    }
+  }
 
   if (items.length === 0) {
     return (
@@ -108,42 +134,105 @@ export default function CartPage() {
               ))}
             </div>
 
+            
             {/* Order Summary */}
             <div className="lg:col-span-1">
               <Card className="sticky top-32 bg-gradient-to-br from-primary/10 to-accent/10 border-4 border-primary/30 rounded-3xl shadow-2xl">
-                <CardContent className="p-8">
-                  <h2 className="text-3xl font-sans font-bold mb-6 text-foreground">Order Summary</h2>
-                  <div className="space-y-4 mb-6">
-                    <div className="flex justify-between text-lg font-mono">
-                      <span className="text-muted-foreground">Total Items:</span>
-                      <span className="font-bold text-foreground">{totalItems}</span>
-                    </div>
-                    <div className="border-t-2 border-border/50 pt-4">
-                      <div className="flex justify-between text-2xl font-sans font-bold">
-                        <span className="text-foreground">Total:</span>
-                        <span className="text-primary">${totalPrice.toFixed(2)}</span>
-                      </div>
-                    </div>
+              <CardContent className="p-8">
+                <h2 className="text-3xl font-sans font-bold mb-6 text-foreground">Order Summary</h2>
+                
+                {/* Order Details */}
+                <div className="space-y-4 mb-6 pb-6 border-b-2 border-border/50">
+                  <div className="flex justify-between text-lg font-mono">
+                    <span className="text-muted-foreground">Total Items:</span>
+                    <span className="font-bold text-foreground">{totalItems}</span>
                   </div>
-                  <Button className="w-full bg-accent text-accent-foreground hover:bg-accent/90 rounded-full shadow-lg text-lg font-sans font-semibold py-6 mb-3">
-                    Proceed to Checkout
-                  </Button>
-                  <Button
-                    variant="outline"
-                    asChild
-                    className="w-full border-2 border-border/50 rounded-full text-base font-sans font-semibold mb-3 bg-transparent"
-                  >
-                    <a href="/products">Continue Shopping</a>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={clearCart}
-                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full text-base font-sans font-semibold"
-                  >
-                    Clear Cart
-                  </Button>
-                </CardContent>
-              </Card>
+                  <div className="flex justify-between text-2xl font-sans font-bold">
+                    <span className="text-foreground">Total:</span>
+                    <span className="text-primary">${totalPrice.toFixed(2)}</span>
+                  </div>
+                </div>
+
+                {/* Pickup/Delivery Selection */}
+                <div className="mb-6">
+                  <h3 className="text-xl font-sans font-bold mb-3 text-foreground">Pickup or Delivery?</h3>
+                  <p className="text-sm font-mono text-muted-foreground mb-4 leading-relaxed">
+                    We're based in NYC! Choose your preferred option.
+                  </p>
+
+                  <div className="space-y-3">
+                    {/* Pickup Option */}
+                    <button
+                      onClick={() => setDeliveryMethod("pickup")}
+                      className={`w-full p-4 rounded-2xl border-3 transition-all text-left ${
+                        deliveryMethod === "pickup"
+                          ? "border-primary bg-primary/20 shadow-lg"
+                          : "border-border/50 bg-card hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <Store
+                          className={`h-6 w-6 mt-1 ${deliveryMethod === "pickup" ? "text-primary" : "text-muted-foreground"}`}
+                        />
+                        <div>
+                          <h4 className="text-lg font-sans font-bold text-foreground mb-1">Pickup</h4>
+                          <p className="text-xs font-mono text-muted-foreground">Pick up in Queens</p>
+                        </div>
+                      </div>
+                    </button>
+
+                    {/* Delivery Option */}
+                    <button
+                      onClick={() => setDeliveryMethod("delivery")}
+                      className={`w-full p-4 rounded-2xl border-3 transition-all text-left ${
+                        deliveryMethod === "delivery"
+                          ? "border-primary bg-primary/20 shadow-lg"
+                          : "border-border/50 bg-card hover:border-primary/50"
+                      }`}
+                    >
+                      <div className="flex items-start gap-3">
+                        <MapPin
+                          className={`h-6 w-6 mt-1 ${deliveryMethod === "delivery" ? "text-primary" : "text-muted-foreground"}`}
+                        />
+                        <div>
+                          <h4 className="text-lg font-sans font-bold text-foreground mb-1">Delivery</h4>
+                          <p className="text-xs font-mono text-muted-foreground">All 5 NYC boroughs</p>
+                        </div>
+                      </div>
+                    </button>
+                  </div>
+
+                  <div className="mt-4 p-3 bg-accent/20 border-2 border-accent/30 rounded-xl">
+                    <p className="text-xs font-mono text-foreground/70 text-center leading-relaxed">
+                      ⚠️ We only serve NYC. Orders outside the 5 boroughs cannot be fulfilled.
+                    </p>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <Button 
+                  className="w-full bg-accent text-accent-foreground hover:bg-accent/90 disabled:opacity-50 disabled:cursor-not-allowed rounded-full shadow-lg text-lg font-sans font-semibold py-6 mb-3"
+                  onClick={handleCheckout}
+                  disabled={loading || items.length === 0 || !deliveryMethod}
+                >
+                  {loading ? "Redirecting..." : deliveryMethod ? "Proceed to Checkout" : "Select Pickup or Delivery"}
+                </Button>
+                <Button
+                  variant="outline"
+                  asChild
+                  className="w-full border-2 border-border/50 rounded-full text-base font-sans font-semibold mb-3 bg-transparent"
+                >
+                  <a href="/products">Continue Shopping</a>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={clearCart}
+                  className="w-full text-destructive hover:text-destructive hover:bg-destructive/10 rounded-full text-base font-sans font-semibold"
+                >
+                  Clear Cart
+                </Button>
+              </CardContent>
+            </Card>
             </div>
           </div>
         </div>
